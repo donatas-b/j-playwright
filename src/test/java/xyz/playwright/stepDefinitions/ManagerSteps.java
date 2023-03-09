@@ -1,29 +1,50 @@
 package xyz.playwright.stepDefinitions;
 
-import com.microsoft.playwright.*;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import xyz.playwright.userInterface.LoginPage;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import xyz.playwright.model.CustomerInformation;
+import xyz.playwright.tasks.Customer;
+import xyz.playwright.tasks.Login;
+import xyz.playwright.tasks.Navigate;
 
-import java.util.Arrays;
+import static org.junit.Assert.assertTrue;
 
 public class ManagerSteps {
-    private Playwright playwright;
-    private Browser browser;
-    private Page page;
-    private LoginPage loginPage;
+    private final ScenarioContext context;
+    private CustomerInformation currentCustomer;
+
+    public ManagerSteps(ScenarioContext context) {
+        this.context = context;
+    }
 
     @Given("Manager has logged in")
     public void managerHasLoggedIn() {
-        playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
-                .setChannel("chrome")
-                .setHeadless(false)
-                .setArgs(Arrays.asList("--start-maximized", "--enable-automation", "--no-sandbox", "--disable-popup-blocking", "--disable-default-apps", "--disable-infobars", "--disable-gpu", "--disable-extensions"))
-                .setSlowMo(1000));
-        BrowserContext browserContext = browser.newContext(new Browser.NewContextOptions().setViewportSize(null));
-        page = browserContext.newPage();
-        page.navigate("https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login");
-        loginPage = new LoginPage(page);
-        loginPage.asManager();
+        Navigate.toBankPage(context.getPage());
+        Login.asManager(context.getPage());
+    }
+
+    @When("he enters new Customer data")
+    public void heEntersNewCustomerData() {
+        Navigate.toAddCustomer(context.getPage());
+        currentCustomer = CustomerInformation.random();
+        Customer.enterInformation(context.getPage(), currentCustomer);
+    }
+
+    @And("he tries to save it")
+    public void heTriesToSaveIt() {
+        Customer.addcustomer(context.getPage());
+    }
+
+    @Then("Customer fields should be cleared")
+    public void customerFieldsShouldBeCleared() {
+        assertTrue("Customer fields were not cleared", Customer.areFieldsCleared(context.getPage()));
+    }
+
+    @And("Customer should appear in Customer List")
+    public void customerShouldAppearInCustomerList() {
+        Navigate.toCustomers(context.getPage());
+        assertTrue(String.format("Customer '%s' is not in the list", currentCustomer.toStringShort()), Customer.isCustomerInTheList(context.getPage(), currentCustomer));
     }
 }

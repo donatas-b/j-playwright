@@ -3,15 +3,15 @@ Feature: Bank Manager functionality
   As a Bank Manager
   I want to be able to manage Customers
 
-  Scenario: Manager login
+  Background:
     Given Manager has logged in
 
 
-#  Scenario: Manager should be able to add new Customer
-#    When he enters new Customer data
-#    And he tries to save it
-#    Then Customer fields should be cleared
-#    And Customer should appear in Customer List
+  Scenario: Manager should be able to add new Customer
+    When he enters new Customer data
+    And he tries to save it
+    Then Customer fields should be cleared
+    And Customer should appear in Customer List
 #
 #
 #  Scenario: Manager can Open Account for Customer

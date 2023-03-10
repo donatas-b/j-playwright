@@ -10,8 +10,8 @@ import xyz.playwright.userInterface.OpenAccountPage;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class Customer {
-    public static void enterInformation(Page page, CustomerInformation customer) {
+public class Manager {
+    public static void enterCustomerInformation(Page page, CustomerInformation customer) {
         AddCustomerPage addCustomerPage = new AddCustomerPage(page);
         addCustomerPage.inputFirstName.fill(customer.getFirstName());
         addCustomerPage.inputLastName.fill(customer.getLastName());
@@ -23,7 +23,7 @@ public class Customer {
         addCustomerPage.btnAddCustomer.click();
     }
 
-    public static boolean areFieldsCleared(Page page) {
+    public static boolean areCustomerFieldsCleared(Page page) {
         AddCustomerPage addCustomerPage = new AddCustomerPage(page);
         String firstName = addCustomerPage.inputFirstName.textContent();
         String lastName = addCustomerPage.inputLastName.textContent();
@@ -47,7 +47,7 @@ public class Customer {
         return isCustomerInTheList && isAccountVisible;
     }
 
-    public static String openAccount(Page page, CustomerInformation customerInformation, Currency currency) {
+    public static String openCustomerAccount(Page page, CustomerInformation customerInformation, Currency currency) {
         OpenAccountPage openAccountPage = new OpenAccountPage(page);
         openAccountPage.drpCustomer.selectOption(customerInformation.toStringShort());
         openAccountPage.drpCurrency.selectOption(currency.getCurrency());
@@ -61,5 +61,15 @@ public class Customer {
 //        });
 //        return result[0];
         return "Account created successfully with account Number :1016";
+    }
+
+    public static void searchCustomers(Page page, CustomerInformation customerInformation) {
+        CustomersPage customersPage = new CustomersPage(page);
+        customersPage.inputSearchCustomers.fill(customerInformation.getFirstName());
+    }
+
+    public static int customerCount(Page page) {
+        CustomersPage customersPage = new CustomersPage(page);
+        return customersPage.tableCustomersRows.count() - 1;
     }
 }

@@ -7,10 +7,11 @@ import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import xyz.playwright.model.Currency;
 import xyz.playwright.model.CustomerInformation;
-import xyz.playwright.tasks.Customer;
 import xyz.playwright.tasks.Login;
+import xyz.playwright.tasks.Manager;
 import xyz.playwright.tasks.Navigate;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Slf4j
@@ -33,38 +34,38 @@ public class ManagerSteps {
     public void heEntersNewCustomerData() {
         Navigate.toAddCustomer(context.getPage());
         currentCustomer = CustomerInformation.random();
-        Customer.enterInformation(context.getPage(), currentCustomer);
+        Manager.enterCustomerInformation(context.getPage(), currentCustomer);
     }
 
     @And("he tries to save it")
     public void heTriesToSaveIt() {
-        Customer.addCustomer(context.getPage());
+        Manager.addCustomer(context.getPage());
     }
 
     @Then("Customer fields should be cleared")
     public void customerFieldsShouldBeCleared() {
-        assertTrue("Customer fields were not cleared", Customer.areFieldsCleared(context.getPage()));
+        assertTrue("Customer fields were not cleared", Manager.areCustomerFieldsCleared(context.getPage()));
     }
 
     @And("Customer should appear in Customer List")
     public void customerShouldAppearInCustomerList() {
         Navigate.toCustomers(context.getPage());
         assertTrue(String.format("Customer '%s' is not in the list", currentCustomer.toStringShort()),
-                Customer.isCustomerInTheList(context.getPage(), currentCustomer));
+                Manager.isCustomerInTheList(context.getPage(), currentCustomer));
     }
 
     @Given("there is a Customer")
     public void thereIsACustomer() {
         Navigate.toAddCustomer(context.getPage());
         currentCustomer = CustomerInformation.random();
-        Customer.enterInformation(context.getPage(), currentCustomer);
-        Customer.addCustomer(context.getPage());
+        Manager.enterCustomerInformation(context.getPage(), currentCustomer);
+        Manager.addCustomer(context.getPage());
     }
 
     @When("Manager opens {string} Account for Customer")
     public void managerOpensAccountForCustomer(String currency) {
         Navigate.toOpenAccount(context.getPage());
-        String alertMessage = Customer.openAccount(context.getPage(), currentCustomer, Currency.byValue(currency));
+        String alertMessage = Manager.openCustomerAccount(context.getPage(), currentCustomer, Currency.byValue(currency));
         createdCustomerAccountNumber = alertMessage.substring(alertMessage.indexOf(":") + 1);
         currentCustomer.addAccount(createdCustomerAccountNumber);
         assertTrue(alertMessage.contains("Account created successfully with account Number"));
@@ -74,6 +75,19 @@ public class ManagerSteps {
     public void customerAccountShouldAppearInCustomerList() {
         Navigate.toCustomers(context.getPage());
         assertTrue(String.format("Customer '%s' is not in the list or it does not has account '%s'", currentCustomer.toStringShort(), createdCustomerAccountNumber),
-                Customer.isCustomerWithAccountInTheList(context.getPage(), currentCustomer, createdCustomerAccountNumber));
+                Manager.isCustomerWithAccountInTheList(context.getPage(), currentCustomer, createdCustomerAccountNumber));
+    }
+
+    @When("Manager does Search for Customer")
+    public void managerDoesSearchForCustomer() {
+        Navigate.toCustomers(context.getPage());
+        Manager.searchCustomers(context.getPage(), currentCustomer);
+    }
+
+    @And("Customer List should contain {int} Customer")
+    public void customerListShouldContainCustomer(int expectedCustomerCount) {
+        int actualCustomerCount = Manager.customerCount(context.getPage());
+        log.info("Actual Customer count: {}", actualCustomerCount);
+        assertEquals(String.format("Expected Customer count %s but was %s", expectedCustomerCount, actualCustomerCount), expectedCustomerCount, actualCustomerCount);
     }
 }

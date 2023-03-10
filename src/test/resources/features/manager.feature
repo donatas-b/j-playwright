@@ -20,13 +20,13 @@ Feature: Bank Manager functionality
     Then Customer Account should appear in Customer List
 
 
-#  Scenario: Manager can Search Customers
-#    Given there is a Customer
-#    When Manager does Search for Customer
-#    Then Customer should appear in Customer List
-#    And Customer List should contain 1 Customer
-#
-#
+  Scenario: Manager can Search Customers
+    Given there is a Customer
+    When Manager does Search for Customer
+    Then Customer should appear in Customer List
+    And Customer List should contain 1 Customer
+
+
 #  Scenario Outline: Manager can Sort Customers
 #    Given there is a Customer
 #    When Manager Sorts Customer List by "<column>" in "<sortOrder>" order

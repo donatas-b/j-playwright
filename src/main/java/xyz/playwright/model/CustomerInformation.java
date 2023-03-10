@@ -54,4 +54,11 @@ public class CustomerInformation {
         }
         this.accountNumbers.add(accountNumber);
     }
+
+    public String getAccountNumbersAsString() {
+        if (this.accountNumbers != null) {
+            return String.join(" ", this.accountNumbers);
+        }
+        return null;
+    }
 }

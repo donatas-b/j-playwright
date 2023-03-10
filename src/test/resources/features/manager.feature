@@ -12,14 +12,14 @@ Feature: Bank Manager functionality
     And he tries to save it
     Then Customer fields should be cleared
     And Customer should appear in Customer List
-#
-#
-#  Scenario: Manager can Open Account for Customer
-#    Given there is a Customer
-#    When Manager opens "Dollar" Account for Customer
-#    Then Customer Account should appear in Customer List
-#
-#
+
+
+  Scenario: Manager can Open Account for Customer
+    Given there is a Customer
+    When Manager opens "Dollar" Account for Customer
+    Then Customer Account should appear in Customer List
+
+
 #  Scenario: Manager can Search Customers
 #    Given there is a Customer
 #    When Manager does Search for Customer

@@ -12,6 +12,7 @@ import xyz.playwright.tasks.Manager;
 import xyz.playwright.tasks.Navigate;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Slf4j
@@ -47,6 +48,7 @@ public class ManagerSteps {
         assertTrue("Customer fields were not cleared", Manager.areCustomerFieldsCleared(context.getPage()));
     }
 
+    @And("Customer appears in Customer List")
     @And("Customer should appear in Customer List")
     public void customerShouldAppearInCustomerList() {
         Navigate.toCustomers(context.getPage());
@@ -89,5 +91,18 @@ public class ManagerSteps {
         int actualCustomerCount = Manager.customerCount(context.getPage());
         log.info("Actual Customer count: {}", actualCustomerCount);
         assertEquals(String.format("Expected Customer count %s but was %s", expectedCustomerCount, actualCustomerCount), expectedCustomerCount, actualCustomerCount);
+    }
+
+    @When("Manager deletes the Customer")
+    public void managerDeletesTheCustomer() {
+        Navigate.toCustomers(context.getPage());
+        Manager.deleteCustomer(context.getPage(), currentCustomer);
+    }
+
+    @Then("Customer should no longer appear in Customer List")
+    public void customerShouldNoLongerAppearInCustomerList() {
+        Manager.clearCustomerSearch(context.getPage());
+        assertFalse(String.format("Customer '%s' was not deleted", currentCustomer.toStringShort()),
+                Manager.isCustomerInTheList(context.getPage(), currentCustomer));
     }
 }

@@ -39,8 +39,8 @@ Feature: Bank Manager functionality
 #      | Post Code  | Descending |
 #
 #
-#  Scenario: Manager can Delete Customer
-#    Given there is a Customer
-#    And Customer appears in Customer List
-#    When Manager deletes the Customer
-#    Then Customer should no longer appear in Customer List
+  Scenario: Manager can Delete Customer
+    Given there is a Customer
+    And Customer appears in Customer List
+    When Manager deletes the Customer
+    Then Customer should no longer appear in Customer List

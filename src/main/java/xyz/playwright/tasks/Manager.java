@@ -4,9 +4,14 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import xyz.playwright.model.Currency;
 import xyz.playwright.model.CustomerInformation;
+import xyz.playwright.model.CustomerSortColumn;
+import xyz.playwright.model.SortOrder;
 import xyz.playwright.userInterface.AddCustomerPage;
 import xyz.playwright.userInterface.CustomersPage;
 import xyz.playwright.userInterface.OpenAccountPage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -15,7 +20,7 @@ public class Manager {
         AddCustomerPage addCustomerPage = new AddCustomerPage(page);
         addCustomerPage.inputFirstName.fill(customer.getFirstName());
         addCustomerPage.inputLastName.fill(customer.getLastName());
-        addCustomerPage.inputPostCode.fill(customer.getLastName());
+        addCustomerPage.inputPostCode.fill(customer.getPostCode());
     }
 
     public static void addCustomer(Page page) {
@@ -82,5 +87,29 @@ public class Manager {
     public static void clearCustomerSearch(Page page) {
         CustomersPage customersPage = new CustomersPage(page);
         customersPage.inputSearchCustomers.clear();
+    }
+
+    public static void sortCustomers(Page page, CustomerSortColumn sortColumn, SortOrder sortOrder) {
+        CustomersPage customersPage = new CustomersPage(page);
+        Locator columnTarget = customersPage.linkFirstName;
+        switch (sortColumn) {
+            case LAST_NAME -> columnTarget = customersPage.linkLastName;
+            case POST_CODE -> columnTarget = customersPage.linkPostCode;
+        }
+        switch (sortOrder) {
+            case DESC -> columnTarget.click();
+            case ASC -> {
+                columnTarget.click();
+                columnTarget.click();
+            }
+        }
+    }
+
+    public static List<CustomerInformation> getCustomerList(Page page) {
+        CustomersPage customersPage = new CustomersPage(page);
+        List<CustomerInformation> result = new ArrayList<>();
+        List<Locator> rows = customersPage.tableCustomersRows.all();
+        rows.subList(1, rows.size()).forEach(row -> result.add(new CustomerInformation(row.allTextContents().get(0))));
+        return result;
     }
 }

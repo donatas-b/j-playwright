@@ -72,4 +72,15 @@ public class Manager {
         CustomersPage customersPage = new CustomersPage(page);
         return customersPage.tableCustomersRows.count() - 1;
     }
+
+    public static void deleteCustomer(Page page, CustomerInformation customerInformation) {
+        searchCustomers(page, customerInformation);
+        CustomersPage customersPage = new CustomersPage(page);
+        customersPage.buttonDelete.click();
+    }
+
+    public static void clearCustomerSearch(Page page) {
+        CustomersPage customersPage = new CustomersPage(page);
+        customersPage.inputSearchCustomers.clear();
+    }
 }

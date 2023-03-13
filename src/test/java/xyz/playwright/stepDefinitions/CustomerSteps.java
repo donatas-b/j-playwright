@@ -1,7 +1,9 @@
 package xyz.playwright.stepDefinitions;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import xyz.playwright.model.AccountSummary;
 import xyz.playwright.model.Currency;
 import xyz.playwright.tasks.Customer;
@@ -45,5 +47,22 @@ public class CustomerSteps {
     public void heShouldSeeSuccessMessage(String message) {
         String actualMessage = Customer.getSuccessMessage(context.getPage());
         assertEquals(message, actualMessage);
+    }
+
+    @And("he logs out")
+    public void heLogsOut() {
+        Login.logout(context.getPage());
+
+    }
+
+    @And("he logs in again")
+    public void heLogsInAgain() {
+        Login.asCustomerAgain(context.getPage());
+    }
+
+    @When("Customer withdraws {int} {string} from his {string} account")
+    public void customerWithdrawsFromHisAccount(Integer amount, String currency, String accountNumber) {
+        Customer.selectAccount(context.getPage(), accountNumber);
+        Customer.withdraw(context.getPage(), amount);
     }
 }

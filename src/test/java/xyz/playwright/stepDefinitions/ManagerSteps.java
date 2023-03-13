@@ -7,9 +7,14 @@ import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 import xyz.playwright.model.Currency;
 import xyz.playwright.model.CustomerInformation;
+import xyz.playwright.model.CustomerSortColumn;
+import xyz.playwright.model.SortOrder;
 import xyz.playwright.tasks.Login;
 import xyz.playwright.tasks.Manager;
 import xyz.playwright.tasks.Navigate;
+
+import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -104,5 +109,44 @@ public class ManagerSteps {
         Manager.clearCustomerSearch(context.getPage());
         assertFalse(String.format("Customer '%s' was not deleted", currentCustomer.toStringShort()),
                 Manager.isCustomerInTheList(context.getPage(), currentCustomer));
+    }
+
+    @When("Manager Sorts Customer List by {string} in {string} order")
+    public void managerSortsCustomerListByInOrder(String columnName, String sortOrder) {
+        Navigate.toCustomers(context.getPage());
+        Manager.sortCustomers(context.getPage(), CustomerSortColumn.byValue(columnName), SortOrder.byValue(sortOrder));
+    }
+
+    @Then("Customer list should be sorted by {string} in {string} order")
+    public void customerListShouldBeSortedByInOrder(String columnName, String sortOrder) {
+        List<CustomerInformation> actualCustomerList = Manager.getCustomerList(context.getPage());
+        log.info("before sort: {}", actualCustomerList);
+        switch (SortOrder.byValue(sortOrder)) {
+            case ASC -> {
+                switch (CustomerSortColumn.byValue(columnName)) {
+                    case FIRST_NAME -> actualCustomerList.sort(Comparator.comparing(CustomerInformation::getFirstName));
+                    case LAST_NAME -> actualCustomerList.sort(Comparator.comparing(CustomerInformation::getLastName));
+                    case POST_CODE -> actualCustomerList.sort(Comparator.comparing(CustomerInformation::getPostCode));
+                }
+            }
+            case DESC -> {
+                switch (CustomerSortColumn.byValue(columnName)) {
+                    case FIRST_NAME ->
+                            actualCustomerList.sort(Comparator.comparing(CustomerInformation::getFirstName).reversed());
+                    case LAST_NAME ->
+                            actualCustomerList.sort(Comparator.comparing(CustomerInformation::getLastName).reversed());
+                    case POST_CODE ->
+                            actualCustomerList.sort(Comparator.comparing(CustomerInformation::getPostCode).reversed());
+                }
+            }
+        }
+        log.info("after sort: {}", actualCustomerList);
+
+        List<String> actualCustomerListStrings = Manager.getCustomerList(context.getPage()).stream().map(CustomerInformation::toString).toList();
+        log.info("actualCustomerListStrings: {}", actualCustomerListStrings);
+        List<String> expectedCustomerListStrings = actualCustomerList.stream().map(CustomerInformation::toString).toList();
+        log.info("expectedCustomerListStrings: {}", expectedCustomerListStrings);
+
+        assertEquals("Customer List is not sorted as expected", expectedCustomerListStrings, actualCustomerListStrings);
     }
 }

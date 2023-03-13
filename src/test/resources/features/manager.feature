@@ -27,18 +27,18 @@ Feature: Bank Manager functionality
     And Customer List should contain 1 Customer
 
 
-#  Scenario Outline: Manager can Sort Customers
-#    Given there is a Customer
-#    When Manager Sorts Customer List by "<column>" in "<sortOrder>" order
-#    Then Customer list should be sorted by "<column>" in "<sortOrder>" order
-##   delete created Customer - looks like for Scenario Outline browser is not restarted properly
-#    And Manager deletes the Customer
-#    Examples:
-#      | column     | sortOrder  |
-#      | First Name | Ascending  |
-#      | Post Code  | Descending |
-#
-#
+  Scenario Outline: Manager can Sort Customers
+    Given there is a Customer
+    When Manager Sorts Customer List by "<column>" in "<sortOrder>" order
+    Then Customer list should be sorted by "<column>" in "<sortOrder>" order
+#   delete created Customer - looks like for Scenario Outline browser is not restarted properly
+    And Manager deletes the Customer
+    Examples:
+      | column     | sortOrder  |
+      | First Name | Ascending  |
+      | Post Code  | Descending |
+
+
   Scenario: Manager can Delete Customer
     Given there is a Customer
     And Customer appears in Customer List

@@ -34,4 +34,16 @@ public class CustomerSteps {
         AccountSummary actualSummary = Customer.getSummary(context.getPage());
         assertEquals("Customer summary is not as expected", expectedSummary.toString(), actualSummary.toString());
     }
+
+    @Given("Customer deposits {int} {string} into his {string} account")
+    public void customerDepositsIntoHisAccount(Integer amount, String currency, String accountNumber) {
+        Customer.selectAccount(context.getPage(), accountNumber);
+        Customer.deposit(context.getPage(), amount);
+    }
+
+    @Then("he should see success message {string}")
+    public void heShouldSeeSuccessMessage(String message) {
+        String actualMessage = Customer.getSuccessMessage(context.getPage());
+        assertEquals(message, actualMessage);
+    }
 }

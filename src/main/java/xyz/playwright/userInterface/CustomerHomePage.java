@@ -14,7 +14,7 @@ public class CustomerHomePage {
 
     public CustomerHomePage(Page page) {
         this.lblCustomerName = page.locator("//span[contains(@class, 'fontBig')]");
-        this.drpAccounts = page.locator("accountSelect");
+        this.drpAccounts = page.locator("//select[@id='accountSelect']");
         this.textAccountSummary = page.locator("//div[contains(@class, 'center')]", new Page.LocatorOptions().setHasText("Account Number"));
         this.buttonTransactions = page.getByText("Transactions");
         this.buttonDeposit = page.getByText("Deposit");

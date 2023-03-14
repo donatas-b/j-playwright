@@ -1,5 +1,6 @@
 package xyz.playwright.stepDefinitions;
 
+import com.microsoft.playwright.Page;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -22,57 +23,54 @@ import static org.junit.Assert.assertTrue;
 
 @Slf4j
 public class ManagerSteps {
-    private final ScenarioContext context;
+    private final Page page = ScenarioContext.getPage();
     private CustomerInformation currentCustomer;
     private String createdCustomerAccountNumber;
 
-    public ManagerSteps(ScenarioContext context) {
-        this.context = context;
-    }
 
     @Given("Manager has logged in")
     public void managerHasLoggedIn() {
-        Navigate.toBankPage(context.getPage());
-        Login.asManager(context.getPage());
+        Navigate.toBankPage(page);
+        Login.asManager(page);
     }
 
     @When("he enters new Customer data")
     public void heEntersNewCustomerData() {
-        Navigate.toAddCustomer(context.getPage());
+        Navigate.toAddCustomer(page);
         currentCustomer = CustomerInformation.random();
-        Manager.enterCustomerInformation(context.getPage(), currentCustomer);
+        Manager.enterCustomerInformation(page, currentCustomer);
     }
 
     @And("he tries to save it")
     public void heTriesToSaveIt() {
-        Manager.addCustomer(context.getPage());
+        Manager.addCustomer(page);
     }
 
     @Then("Customer fields should be cleared")
     public void customerFieldsShouldBeCleared() {
-        assertTrue("Customer fields were not cleared", Manager.areCustomerFieldsCleared(context.getPage()));
+        assertTrue("Customer fields were not cleared", Manager.areCustomerFieldsCleared(page));
     }
 
     @And("Customer appears in Customer List")
     @And("Customer should appear in Customer List")
     public void customerShouldAppearInCustomerList() {
-        Navigate.toCustomers(context.getPage());
+        Navigate.toCustomers(page);
         assertTrue(String.format("Customer '%s' is not in the list", currentCustomer.toStringShort()),
-                Manager.isCustomerInTheList(context.getPage(), currentCustomer));
+                Manager.isCustomerInTheList(page, currentCustomer));
     }
 
     @Given("there is a Customer")
     public void thereIsACustomer() {
-        Navigate.toAddCustomer(context.getPage());
+        Navigate.toAddCustomer(page);
         currentCustomer = CustomerInformation.random();
-        Manager.enterCustomerInformation(context.getPage(), currentCustomer);
-        Manager.addCustomer(context.getPage());
+        Manager.enterCustomerInformation(page, currentCustomer);
+        Manager.addCustomer(page);
     }
 
     @When("Manager opens {string} Account for Customer")
     public void managerOpensAccountForCustomer(String currency) {
-        Navigate.toOpenAccount(context.getPage());
-        String alertMessage = Manager.openCustomerAccount(context.getPage(), currentCustomer, Currency.byValue(currency));
+        Navigate.toOpenAccount(page);
+        String alertMessage = Manager.openCustomerAccount(page, currentCustomer, Currency.byValue(currency));
         createdCustomerAccountNumber = alertMessage.substring(alertMessage.indexOf(":") + 1);
         currentCustomer.addAccount(createdCustomerAccountNumber);
         assertTrue(alertMessage.contains("Account created successfully with account Number"));
@@ -80,46 +78,46 @@ public class ManagerSteps {
 
     @Then("Customer Account should appear in Customer List")
     public void customerAccountShouldAppearInCustomerList() {
-        Navigate.toCustomers(context.getPage());
+        Navigate.toCustomers(page);
         assertTrue(String.format("Customer '%s' is not in the list or it does not has account '%s'", currentCustomer.toStringShort(), createdCustomerAccountNumber),
-                Manager.isCustomerWithAccountInTheList(context.getPage(), currentCustomer, createdCustomerAccountNumber));
+                Manager.isCustomerWithAccountInTheList(page, currentCustomer, createdCustomerAccountNumber));
     }
 
     @When("Manager does Search for Customer")
     public void managerDoesSearchForCustomer() {
-        Navigate.toCustomers(context.getPage());
-        Manager.searchCustomers(context.getPage(), currentCustomer);
+        Navigate.toCustomers(page);
+        Manager.searchCustomers(page, currentCustomer);
     }
 
     @And("Customer List should contain {int} Customer")
     public void customerListShouldContainCustomer(int expectedCustomerCount) {
-        int actualCustomerCount = Manager.customerCount(context.getPage());
+        int actualCustomerCount = Manager.customerCount(page);
         log.info("Actual Customer count: {}", actualCustomerCount);
         assertEquals(String.format("Expected Customer count %s but was %s", expectedCustomerCount, actualCustomerCount), expectedCustomerCount, actualCustomerCount);
     }
 
     @When("Manager deletes the Customer")
     public void managerDeletesTheCustomer() {
-        Navigate.toCustomers(context.getPage());
-        Manager.deleteCustomer(context.getPage(), currentCustomer);
+        Navigate.toCustomers(page);
+        Manager.deleteCustomer(page, currentCustomer);
     }
 
     @Then("Customer should no longer appear in Customer List")
     public void customerShouldNoLongerAppearInCustomerList() {
-        Manager.clearCustomerSearch(context.getPage());
+        Manager.clearCustomerSearch(page);
         assertFalse(String.format("Customer '%s' was not deleted", currentCustomer.toStringShort()),
-                Manager.isCustomerInTheList(context.getPage(), currentCustomer));
+                Manager.isCustomerInTheList(page, currentCustomer));
     }
 
     @When("Manager Sorts Customer List by {string} in {string} order")
     public void managerSortsCustomerListByInOrder(String columnName, String sortOrder) {
-        Navigate.toCustomers(context.getPage());
-        Manager.sortCustomers(context.getPage(), CustomerSortColumn.byValue(columnName), SortOrder.byValue(sortOrder));
+        Navigate.toCustomers(page);
+        Manager.sortCustomers(page, CustomerSortColumn.byValue(columnName), SortOrder.byValue(sortOrder));
     }
 
     @Then("Customer list should be sorted by {string} in {string} order")
     public void customerListShouldBeSortedByInOrder(String columnName, String sortOrder) {
-        List<CustomerInformation> actualCustomerList = Manager.getCustomerList(context.getPage());
+        List<CustomerInformation> actualCustomerList = Manager.getCustomerList(page);
         log.info("before sort: {}", actualCustomerList);
         switch (SortOrder.byValue(sortOrder)) {
             case ASC -> {
@@ -142,7 +140,7 @@ public class ManagerSteps {
         }
         log.info("after sort: {}", actualCustomerList);
 
-        List<String> actualCustomerListStrings = Manager.getCustomerList(context.getPage()).stream().map(CustomerInformation::toString).toList();
+        List<String> actualCustomerListStrings = Manager.getCustomerList(page).stream().map(CustomerInformation::toString).toList();
         log.info("actualCustomerListStrings: {}", actualCustomerListStrings);
         List<String> expectedCustomerListStrings = actualCustomerList.stream().map(CustomerInformation::toString).toList();
         log.info("expectedCustomerListStrings: {}", expectedCustomerListStrings);

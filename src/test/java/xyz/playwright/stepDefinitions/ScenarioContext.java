@@ -7,13 +7,17 @@ import java.util.Arrays;
 
 public class ScenarioContext {
 
-    private final Playwright playwright;
-    private final Browser browser;
-    private final BrowserContext browserContext;
+    private static Playwright playwright;
+    private static Browser browser;
+    private static BrowserContext browserContext;
     @Getter
-    private final Page page;
+    private static Page page;
 
     public ScenarioContext() {
+        init();
+    }
+
+    public static void init() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
                 .setChannel("chrome")
@@ -25,12 +29,14 @@ public class ScenarioContext {
                         "--disable-infobars",
                         "--disable-gpu",
                         "--disable-extensions"))
-                .setSlowMo(1000));
+                .setSlowMo(500)
+        );
         browserContext = browser.newContext(new Browser.NewContextOptions().setViewportSize(null));
         page = browserContext.newPage();
+
     }
 
-    public void close() {
+    public static void close() {
         page.close();
         browserContext.close();
         browser.close();

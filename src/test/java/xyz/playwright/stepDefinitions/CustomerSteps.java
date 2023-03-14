@@ -1,5 +1,6 @@
 package xyz.playwright.stepDefinitions;
 
+import com.microsoft.playwright.Page;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -19,16 +20,12 @@ import static org.junit.Assert.assertEquals;
 
 public class CustomerSteps {
 
-    private final ScenarioContext context;
-
-    public CustomerSteps(ScenarioContext context) {
-        this.context = context;
-    }
+    private final Page page = ScenarioContext.getPage();
 
     @Given("Customer has logged in")
     public void customerHasLoggedIn() {
-        Navigate.toBankPage(context.getPage());
-        Login.asCustomer(context.getPage());
+        Navigate.toBankPage(page);
+        Login.asCustomer(page);
     }
 
     @Then("his {string} Account Summary should have {int} {string}")
@@ -38,60 +35,60 @@ public class CustomerSteps {
                 .balance(balance)
                 .currency(Currency.byValue(currency))
                 .build();
-        AccountSummary actualSummary = Customer.getSummary(context.getPage());
-        assertEquals("Customer summary is not as expected", expectedSummary.toString(), actualSummary.toString());
+        AccountSummary actualSummary = Customer.getSummary(page);
+        assertEquals("Customer summary is not as expected:", expectedSummary.toString(), actualSummary.toString());
     }
 
     @Given("Customer deposits {int} {string} into his {string} account")
     public void customerDepositsIntoHisAccount(Integer amount, String currency, String accountNumber) {
-        Customer.selectAccount(context.getPage(), accountNumber);
-        Customer.deposit(context.getPage(), amount);
+        Customer.selectAccount(page, accountNumber);
+        Customer.deposit(page, amount);
     }
 
     @Then("he should see success message {string}")
     public void heShouldSeeSuccessMessage(String message) {
-        String actualMessage = Customer.getSuccessMessage(context.getPage());
+        String actualMessage = Customer.getSuccessMessage(page);
         assertEquals(message, actualMessage);
     }
 
     @And("he logs out")
     public void heLogsOut() {
-        Login.logout(context.getPage());
+        Login.logout(page);
 
     }
 
     @And("he logs in again")
     public void heLogsInAgain() {
-        Login.asCustomerAgain(context.getPage());
+        Login.asCustomerAgain(page);
     }
 
     @When("Customer withdraws {int} {string} from his {string} account")
     public void customerWithdrawsFromHisAccount(Integer amount, String currency, String accountNumber) {
-        Customer.selectAccount(context.getPage(), accountNumber);
-        Customer.withdraw(context.getPage(), amount);
+        Customer.selectAccount(page, accountNumber);
+        Customer.withdraw(page, amount);
     }
 
     @When("Customer Resets his {string} account")
     public void customerResetsHisAccount(String accountNumber) {
-        Customer.selectAccount(context.getPage(), accountNumber);
-        Customer.resetAccount(context.getPage());
+        Customer.selectAccount(page, accountNumber);
+        Customer.resetAccount(page);
     }
 
     @When("Customer Sorts his {string} Account Transactions by Date in {string} order")
     public void customerSortsHisAccountTransactionsByDateInOrder(String accountNumber, String sortOrder) {
-        Customer.selectAccount(context.getPage(), accountNumber);
-        Customer.sortTransactions(context.getPage(), SortOrder.byValue(sortOrder));
+        Customer.selectAccount(page, accountNumber);
+        Customer.sortTransactions(page, SortOrder.byValue(sortOrder));
     }
 
     @Then("Customer Account Transactions should be sorted by Date in {string} order")
     public void customerAccountTransactionsShouldBeSortedByDateInOrder(String sortOrder) {
-        List<CustomerTransaction> transactions = Customer.getTransactions(context.getPage());
+        List<CustomerTransaction> transactions = Customer.getTransactions(page);
         switch (SortOrder.byValue(sortOrder)) {
             case ASC -> transactions.sort(Comparator.comparing(CustomerTransaction::getDateTime));
             case DESC -> transactions.sort(Comparator.comparing(CustomerTransaction::getDateTime).reversed());
         }
 
-        List<String> actualTransactions = Customer.getTransactions(context.getPage()).stream().map(CustomerTransaction::toString).toList();
+        List<String> actualTransactions = Customer.getTransactions(page).stream().map(CustomerTransaction::toString).toList();
         List<String> expectedTransactions = transactions.stream().map(CustomerTransaction::toString).toList();
 
         assertEquals("Transaction List is not sorted as expected", expectedTransactions, actualTransactions);
@@ -108,10 +105,10 @@ public class CustomerSteps {
                     .build()
                     .toStringNoDate());
         }
-        Customer.selectAccount(context.getPage(), accountNumber);
-        Customer.goToTransactions(context.getPage());
+        Customer.selectAccount(page, accountNumber);
+        Customer.goToTransactions(page);
 
-        List<String> actualTransactions = Customer.getTransactions(context.getPage()).stream().map(CustomerTransaction::toStringNoDate).toList();
+        List<String> actualTransactions = Customer.getTransactions(page).stream().map(CustomerTransaction::toStringNoDate).toList();
 
         assertEquals("Transaction List is not as expected", expectedTransactions, actualTransactions);
     }

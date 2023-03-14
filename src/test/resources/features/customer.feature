@@ -26,15 +26,15 @@ Feature: Bank Customer functionality
     And his "1009" Account Summary should have 136 "Rupee"
 
 
-#  Scenario: Customer can Reset his Account
-#    Given Customer deposits 213 "Rupee" into his "1009" account
-#    And he logs out
-#    And he logs in again
-#    And Customer withdraws 77 "Rupee" from his "1009" account
-#    When Customer Resets his "1009" account
-#    Then his "1009" Account Summary should have 0 "Rupee"
-#
-#
+  Scenario: Customer can Reset his Account
+    Given Customer deposits 213 "Rupee" into his "1009" account
+    And he logs out
+    And he logs in again
+    And Customer withdraws 77 "Rupee" from his "1009" account
+    When Customer Resets his "1009" account
+    Then his "1009" Account Summary should have 0 "Rupee"
+
+
 #  Scenario: Customer can Sort his Account Transactions
 #    Given Customer deposits 1213 "Pound" into his "1008" account
 #    And he logs out

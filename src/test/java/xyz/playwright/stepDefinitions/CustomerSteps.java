@@ -65,4 +65,10 @@ public class CustomerSteps {
         Customer.selectAccount(context.getPage(), accountNumber);
         Customer.withdraw(context.getPage(), amount);
     }
+
+    @When("Customer Resets his {string} account")
+    public void customerResetsHisAccount(String accountNumber) {
+        Customer.selectAccount(context.getPage(), accountNumber);
+        Customer.resetAccount(context.getPage());
+    }
 }

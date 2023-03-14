@@ -33,11 +33,6 @@
             <version>${cucumber.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-picocontainer</artifactId>
-            <version>${cucumber.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -55,17 +50,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>2.0.6</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.aventstack</groupId>-->
-<!--            <artifactId>extentreports-cucumber4-adapter</artifactId>-->
-<!--            <version>1.2.1</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.aventstack</groupId>-->
-<!--            <artifactId>extentreports</artifactId>-->
-<!--            <version>5.0.6</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>tech.grasshopper</groupId>
@@ -111,7 +95,8 @@
                     </includes>
                     <systemPropertyVariables>
                         <browser>chrome</browser>
-                        <applicationUrl>https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login</applicationUrl>
+                        <applicationUrl>https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login
+                        </applicationUrl>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

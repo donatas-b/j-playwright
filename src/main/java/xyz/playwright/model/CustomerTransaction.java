@@ -7,7 +7,6 @@ import lombok.ToString;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Builder
 @Getter
@@ -17,12 +16,6 @@ public class CustomerTransaction {
     private String dateTime;
     private Integer amount;
     private TransactionType transactionType;
-
-    public CustomerTransaction(Map<Object, String> tableRow) {
-        this.dateTime = tableRow.get(1);
-        this.amount = Integer.valueOf(tableRow.get(2));
-        this.transactionType = TransactionType.byValue(tableRow.get(3));
-    }
 
     public CustomerTransaction(String tableRow) {
         List<String> cells = Arrays.asList(tableRow.split("\n"));

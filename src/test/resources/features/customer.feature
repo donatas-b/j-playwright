@@ -47,16 +47,16 @@ Feature: Bank Customer functionality
     Then Customer Account Transactions should be sorted by Date in "Descending" order
 
 
-#  Scenario: Customer can check Transactions which happened in his Account
-#    Given Customer deposits 1213 "Pound" into his "1008" account
-#    And he logs out
-#    And he logs in again
-#    And Customer withdraws 177 "Pound" from his "1008" account
-#    And he logs out
-#    And he logs in again
-#    And Customer withdraws 217 "Pound" from his "1008" account
-#    Then Customer "1008" Account Transactions should contain following records
-#      | Amount | TransactionType |
-#      | 1213   | Credit          |
-#      | 177    | Debit           |
-#      | 217    | Debit           |
+  Scenario: Customer can check Transactions which happened in his Account
+    Given Customer deposits 1213 "Pound" into his "1008" account
+    And he logs out
+    And he logs in again
+    And Customer withdraws 177 "Pound" from his "1008" account
+    And he logs out
+    And he logs in again
+    And Customer withdraws 217 "Pound" from his "1008" account
+    Then Customer "1008" Account Transactions should contain following records
+      | Amount | TransactionType |
+      | 1213   | Credit          |
+      | 177    | Debit           |
+      | 217    | Debit           |

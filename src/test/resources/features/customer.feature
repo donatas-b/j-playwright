@@ -35,18 +35,18 @@ Feature: Bank Customer functionality
     Then his "1009" Account Summary should have 0 "Rupee"
 
 
-#  Scenario: Customer can Sort his Account Transactions
-#    Given Customer deposits 1213 "Pound" into his "1008" account
-#    And he logs out
-#    And he logs in again
-#    And Customer withdraws 177 "Pound" from his "1008" account
-#    And he logs out
-#    And he logs in again
-#    And Customer withdraws 217 "Pound" from his "1008" account
-#    When Customer Sorts his "1008" Account Transactions by Date in "Descending" order
-#    Then Customer Account Transactions should be sorted by Date in "Descending" order
-#
-#
+  Scenario: Customer can Sort his Account Transactions
+    Given Customer deposits 1213 "Pound" into his "1008" account
+    And he logs out
+    And he logs in again
+    And Customer withdraws 177 "Pound" from his "1008" account
+    And he logs out
+    And he logs in again
+    And Customer withdraws 217 "Pound" from his "1008" account
+    When Customer Sorts his "1008" Account Transactions by Date in "Descending" order
+    Then Customer Account Transactions should be sorted by Date in "Descending" order
+
+
 #  Scenario: Customer can check Transactions which happened in his Account
 #    Given Customer deposits 1213 "Pound" into his "1008" account
 #    And he logs out

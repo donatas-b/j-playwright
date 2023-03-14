@@ -1,10 +1,16 @@
 package xyz.playwright.tasks;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import xyz.playwright.model.AccountSummary;
+import xyz.playwright.model.CustomerTransaction;
+import xyz.playwright.model.SortOrder;
 import xyz.playwright.userInterface.CustomerHomePage;
 import xyz.playwright.userInterface.CustomerTransactionPage;
 import xyz.playwright.userInterface.CustomerTransactionsPage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Customer {
     public static AccountSummary getSummary(Page page) {
@@ -46,5 +52,27 @@ public class Customer {
         CustomerTransactionsPage customerTransactionsPage = new CustomerTransactionsPage(page);
         customerTransactionsPage.buttonReset.click();
         customerTransactionsPage.buttonBack.click();
+    }
+
+    public static void sortTransactions(Page page, SortOrder sortOrder) {
+        CustomerHomePage customerHomePage = new CustomerHomePage(page);
+        customerHomePage.buttonTransactions.click();
+        CustomerTransactionsPage customerTransactionsPage = new CustomerTransactionsPage(page);
+        switch (sortOrder) {
+            case ASC -> {
+                customerTransactionsPage.linkDate.click();
+                customerTransactionsPage.linkDate.click();
+            }
+            case DESC -> customerTransactionsPage.linkDate.click();
+        }
+    }
+
+    public static List<CustomerTransaction> getTransactions(Page page) {
+        CustomerTransactionsPage customerTransactionsPage = new CustomerTransactionsPage(page);
+        List<CustomerTransaction> result = new ArrayList<>();
+        List<Locator> rows = customerTransactionsPage.tableTransactionsRows.all();
+        rows.subList(1, rows.size()).forEach(row -> result.add(new CustomerTransaction(row.allTextContents().get(0))));
+        return result;
+
     }
 }

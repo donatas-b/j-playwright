@@ -47,16 +47,14 @@ public class Customer {
     }
 
     public static void resetAccount(Page page) {
-        CustomerHomePage customerHomePage = new CustomerHomePage(page);
-        customerHomePage.buttonTransactions.click();
+        goToTransactions(page);
         CustomerTransactionsPage customerTransactionsPage = new CustomerTransactionsPage(page);
         customerTransactionsPage.buttonReset.click();
         customerTransactionsPage.buttonBack.click();
     }
 
     public static void sortTransactions(Page page, SortOrder sortOrder) {
-        CustomerHomePage customerHomePage = new CustomerHomePage(page);
-        customerHomePage.buttonTransactions.click();
+        goToTransactions(page);
         CustomerTransactionsPage customerTransactionsPage = new CustomerTransactionsPage(page);
         switch (sortOrder) {
             case ASC -> {
@@ -74,5 +72,10 @@ public class Customer {
         rows.subList(1, rows.size()).forEach(row -> result.add(new CustomerTransaction(row.allTextContents().get(0))));
         return result;
 
+    }
+
+    public static void goToTransactions(Page page) {
+        CustomerHomePage customerHomePage = new CustomerHomePage(page);
+        customerHomePage.buttonTransactions.click();
     }
 }

@@ -1,19 +1,19 @@
 package xyz.playwright.stepDefinitions;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import xyz.playwright.model.AccountSummary;
-import xyz.playwright.model.Currency;
-import xyz.playwright.model.CustomerTransaction;
-import xyz.playwright.model.SortOrder;
+import xyz.playwright.model.*;
 import xyz.playwright.tasks.Customer;
 import xyz.playwright.tasks.Login;
 import xyz.playwright.tasks.Navigate;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -95,5 +95,24 @@ public class CustomerSteps {
         List<String> expectedTransactions = transactions.stream().map(CustomerTransaction::toString).toList();
 
         assertEquals("Transaction List is not sorted as expected", expectedTransactions, actualTransactions);
+    }
+
+    @Then("Customer {string} Account Transactions should contain following records")
+    public void customerAccountTransactionsShouldContainFollowingRecords(String accountNumber, DataTable expectedRecords) {
+        List<String> expectedTransactions = new ArrayList<>();
+        List<Map<String, String>> rows = expectedRecords.asMaps(String.class, String.class);
+        for (Map<String, String> columns : rows) {
+            expectedTransactions.add(CustomerTransaction.builder()
+                    .amount(Integer.valueOf(columns.get("Amount")))
+                    .transactionType(TransactionType.byValue(columns.get("TransactionType")))
+                    .build()
+                    .toStringNoDate());
+        }
+        Customer.selectAccount(context.getPage(), accountNumber);
+        Customer.goToTransactions(context.getPage());
+
+        List<String> actualTransactions = Customer.getTransactions(context.getPage()).stream().map(CustomerTransaction::toStringNoDate).toList();
+
+        assertEquals("Transaction List is not as expected", expectedTransactions, actualTransactions);
     }
 }

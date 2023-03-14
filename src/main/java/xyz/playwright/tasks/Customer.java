@@ -4,6 +4,7 @@ import com.microsoft.playwright.Page;
 import xyz.playwright.model.AccountSummary;
 import xyz.playwright.userInterface.CustomerHomePage;
 import xyz.playwright.userInterface.CustomerTransactionPage;
+import xyz.playwright.userInterface.CustomerTransactionsPage;
 
 public class Customer {
     public static AccountSummary getSummary(Page page) {
@@ -37,5 +38,13 @@ public class Customer {
         CustomerTransactionPage customerTransactionPage = new CustomerTransactionPage(page);
         customerTransactionPage.inputAmount.fill(amount.toString());
         customerTransactionPage.buttonTransaction.click();
+    }
+
+    public static void resetAccount(Page page) {
+        CustomerHomePage customerHomePage = new CustomerHomePage(page);
+        customerHomePage.buttonTransactions.click();
+        CustomerTransactionsPage customerTransactionsPage = new CustomerTransactionsPage(page);
+        customerTransactionsPage.buttonReset.click();
+        customerTransactionsPage.buttonBack.click();
     }
 }

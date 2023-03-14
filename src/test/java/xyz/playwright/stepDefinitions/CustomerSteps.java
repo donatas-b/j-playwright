@@ -6,9 +6,14 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import xyz.playwright.model.AccountSummary;
 import xyz.playwright.model.Currency;
+import xyz.playwright.model.CustomerTransaction;
+import xyz.playwright.model.SortOrder;
 import xyz.playwright.tasks.Customer;
 import xyz.playwright.tasks.Login;
 import xyz.playwright.tasks.Navigate;
+
+import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -70,5 +75,25 @@ public class CustomerSteps {
     public void customerResetsHisAccount(String accountNumber) {
         Customer.selectAccount(context.getPage(), accountNumber);
         Customer.resetAccount(context.getPage());
+    }
+
+    @When("Customer Sorts his {string} Account Transactions by Date in {string} order")
+    public void customerSortsHisAccountTransactionsByDateInOrder(String accountNumber, String sortOrder) {
+        Customer.selectAccount(context.getPage(), accountNumber);
+        Customer.sortTransactions(context.getPage(), SortOrder.byValue(sortOrder));
+    }
+
+    @Then("Customer Account Transactions should be sorted by Date in {string} order")
+    public void customerAccountTransactionsShouldBeSortedByDateInOrder(String sortOrder) {
+        List<CustomerTransaction> transactions = Customer.getTransactions(context.getPage());
+        switch (SortOrder.byValue(sortOrder)) {
+            case ASC -> transactions.sort(Comparator.comparing(CustomerTransaction::getDateTime));
+            case DESC -> transactions.sort(Comparator.comparing(CustomerTransaction::getDateTime).reversed());
+        }
+
+        List<String> actualTransactions = Customer.getTransactions(context.getPage()).stream().map(CustomerTransaction::toString).toList();
+        List<String> expectedTransactions = transactions.stream().map(CustomerTransaction::toString).toList();
+
+        assertEquals("Transaction List is not sorted as expected", expectedTransactions, actualTransactions);
     }
 }

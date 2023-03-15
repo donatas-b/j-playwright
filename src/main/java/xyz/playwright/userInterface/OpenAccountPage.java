@@ -2,11 +2,13 @@ package xyz.playwright.userInterface;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import lombok.Getter;
 
+@Getter
 public class OpenAccountPage {
-    public Locator drpCustomer;
-    public Locator drpCurrency;
-    public Locator buttonProcess;
+    private final Locator drpCustomer;
+    private final Locator drpCurrency;
+    private final Locator buttonProcess;
 
     public OpenAccountPage(Page page) {
         this.drpCustomer = page.locator("//select[@id='userSelect']");

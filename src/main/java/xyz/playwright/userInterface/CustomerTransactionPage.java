@@ -2,10 +2,12 @@ package xyz.playwright.userInterface;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import lombok.Getter;
 
+@Getter
 public class CustomerTransactionPage {
-    public Locator inputAmount;
-    public Locator buttonTransaction;
+    private final Locator inputAmount;
+    private final Locator buttonTransaction;
 
     public CustomerTransactionPage(Page page) {
         this.inputAmount = page.locator("//input[contains(@ng-model, 'amount')]");

@@ -2,10 +2,12 @@ package xyz.playwright.userInterface;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import lombok.Getter;
 
+@Getter
 public class LoginPage {
-    public Locator btnCustomerLogin;
-    public Locator btnBankManagerLogin;
+    private final Locator btnCustomerLogin;
+    private final Locator btnBankManagerLogin;
 
     public LoginPage(Page page) {
         this.btnCustomerLogin = page.getByText("Customer Login");

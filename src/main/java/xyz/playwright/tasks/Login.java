@@ -8,23 +8,23 @@ import xyz.playwright.userInterface.LoginPage;
 public class Login {
     public static void asManager(Page page) {
         LoginPage loginPage = new LoginPage(page);
-        loginPage.btnBankManagerLogin.click();
+        loginPage.getBtnBankManagerLogin().click();
     }
 
     public static void asCustomer(Page page) {
         LoginPage loginPage = new LoginPage(page);
-        loginPage.btnCustomerLogin.click();
+        loginPage.getBtnCustomerLogin().click();
         asCustomerAgain(page);
     }
 
     public static void asCustomerAgain(Page page) {
         CustomerLoginPage customerLoginPage = new CustomerLoginPage(page);
-        customerLoginPage.drpYourName.selectOption("Ron Weasly");
-        customerLoginPage.buttonLogin.click();
+        customerLoginPage.getDrpYourName().selectOption("Ron Weasly");
+        customerLoginPage.getButtonLogin().click();
     }
 
     public static void logout(Page page) {
         Header header = new Header(page);
-        header.buttonLogout.click();
+        header.getButtonLogout().click();
     }
 }

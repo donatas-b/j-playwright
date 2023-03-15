@@ -2,11 +2,13 @@ package xyz.playwright.userInterface;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import lombok.Getter;
 
+@Getter
 public class ManagerHomePage {
-    public Locator btnAddCustomer;
-    public Locator btnOpenAccount;
-    public Locator btnCustomers;
+    private final Locator btnAddCustomer;
+    private final Locator btnOpenAccount;
+    private final Locator btnCustomers;
 
     public ManagerHomePage(Page page) {
         this.btnAddCustomer = page.getByText("Add Customer");

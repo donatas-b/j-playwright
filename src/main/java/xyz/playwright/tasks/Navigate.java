@@ -10,16 +10,16 @@ public class Navigate {
 
     public static void toAddCustomer(Page page) {
         ManagerHomePage managerHomePage = new ManagerHomePage(page);
-        managerHomePage.btnAddCustomer.click();
+        managerHomePage.getBtnAddCustomer().click();
     }
 
     public static void toOpenAccount(Page page) {
         ManagerHomePage managerHomePage = new ManagerHomePage(page);
-        managerHomePage.btnOpenAccount.click();
+        managerHomePage.getBtnOpenAccount().click();
     }
 
     public static void toCustomers(Page page) {
         ManagerHomePage managerHomePage = new ManagerHomePage(page);
-        managerHomePage.btnCustomers.click();
+        managerHomePage.getBtnCustomers().click();
     }
 }

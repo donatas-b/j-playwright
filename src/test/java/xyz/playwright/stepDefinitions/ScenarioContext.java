@@ -1,8 +1,10 @@
 package xyz.playwright.stepDefinitions;
 
 import com.microsoft.playwright.*;
+import io.qameta.allure.Allure;
 import lombok.Getter;
 
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 
 public class ScenarioContext {
@@ -41,5 +43,9 @@ public class ScenarioContext {
         browserContext.close();
         browser.close();
         playwright.close();
+    }
+
+    public static void takeScreenshot(String name) {
+        Allure.addAttachment(name, new ByteArrayInputStream(ScenarioContext.getPage().screenshot()));
     }
 }

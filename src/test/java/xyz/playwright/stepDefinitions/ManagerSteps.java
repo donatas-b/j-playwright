@@ -32,6 +32,7 @@ public class ManagerSteps {
     public void managerHasLoggedIn() {
         Navigate.toBankPage(page);
         Login.asManager(page);
+        ScenarioContext.takeScreenshot("Manager has logged in");
     }
 
     @When("he enters new Customer data")

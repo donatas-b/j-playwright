@@ -2,15 +2,17 @@ package xyz.playwright.userInterface;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import lombok.Getter;
 
+@Getter
 public class CustomerHomePage {
-    public Locator lblCustomerName;
-    public Locator drpAccounts;
-    public Locator textAccountSummary;
-    public Locator buttonTransactions;
-    public Locator buttonDeposit;
-    public Locator buttonWithdrawal;
-    public Locator labelMessage;
+    private final Locator lblCustomerName;
+    private final Locator drpAccounts;
+    private final Locator textAccountSummary;
+    private final Locator buttonTransactions;
+    private final Locator buttonDeposit;
+    private final Locator buttonWithdrawal;
+    private final Locator labelMessage;
 
     public CustomerHomePage(Page page) {
         this.lblCustomerName = page.locator("//span[contains(@class, 'fontBig')]");

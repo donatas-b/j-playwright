@@ -18,45 +18,45 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class Manager {
     public static void enterCustomerInformation(Page page, CustomerInformation customer) {
         AddCustomerPage addCustomerPage = new AddCustomerPage(page);
-        addCustomerPage.inputFirstName.fill(customer.getFirstName());
-        addCustomerPage.inputLastName.fill(customer.getLastName());
-        addCustomerPage.inputPostCode.fill(customer.getPostCode());
+        addCustomerPage.getInputFirstName().fill(customer.getFirstName());
+        addCustomerPage.getInputLastName().fill(customer.getLastName());
+        addCustomerPage.getInputPostCode().fill(customer.getPostCode());
     }
 
     public static void addCustomer(Page page) {
         AddCustomerPage addCustomerPage = new AddCustomerPage(page);
-        addCustomerPage.btnAddCustomer.click();
+        addCustomerPage.getButtonAddCustomer().click();
     }
 
     public static boolean areCustomerFieldsCleared(Page page) {
         AddCustomerPage addCustomerPage = new AddCustomerPage(page);
-        String firstName = addCustomerPage.inputFirstName.textContent();
-        String lastName = addCustomerPage.inputLastName.textContent();
-        String postCode = addCustomerPage.inputPostCode.textContent();
+        String firstName = addCustomerPage.getInputFirstName().textContent();
+        String lastName = addCustomerPage.getInputLastName().textContent();
+        String postCode = addCustomerPage.getInputPostCode().textContent();
 
         return isEmpty(firstName) && isEmpty(lastName) && isEmpty(postCode);
     }
 
     public static boolean isCustomerInTheList(Page page, CustomerInformation customerInformation) {
         CustomersPage customersPage = new CustomersPage(page);
-        boolean isFirstNameVisible = customersPage.tableCustomers.filter(new Locator.FilterOptions().setHasText(customerInformation.getFirstName())).isVisible();
-        boolean isLastNameVisible = customersPage.tableCustomers.filter(new Locator.FilterOptions().setHasText(customerInformation.getLastName())).isVisible();
-        boolean isPostCodeVisible = customersPage.tableCustomers.filter(new Locator.FilterOptions().setHasText(customerInformation.getPostCode())).isVisible();
+        boolean isFirstNameVisible = customersPage.getTableCustomers().filter(new Locator.FilterOptions().setHasText(customerInformation.getFirstName())).isVisible();
+        boolean isLastNameVisible = customersPage.getTableCustomers().filter(new Locator.FilterOptions().setHasText(customerInformation.getLastName())).isVisible();
+        boolean isPostCodeVisible = customersPage.getTableCustomers().filter(new Locator.FilterOptions().setHasText(customerInformation.getPostCode())).isVisible();
         return isFirstNameVisible && isLastNameVisible && isPostCodeVisible;
     }
 
     public static boolean isCustomerWithAccountInTheList(Page page, CustomerInformation customerInformation, String accountNumber) {
         boolean isCustomerInTheList = isCustomerInTheList(page, customerInformation);
         CustomersPage customersPage = new CustomersPage(page);
-        boolean isAccountVisible = customersPage.tableCustomers.filter(new Locator.FilterOptions().setHasText(accountNumber)).isVisible();
+        boolean isAccountVisible = customersPage.getTableCustomers().filter(new Locator.FilterOptions().setHasText(accountNumber)).isVisible();
         return isCustomerInTheList && isAccountVisible;
     }
 
     public static String openCustomerAccount(Page page, CustomerInformation customerInformation, Currency currency) {
         OpenAccountPage openAccountPage = new OpenAccountPage(page);
-        openAccountPage.drpCustomer.selectOption(customerInformation.toStringShort());
-        openAccountPage.drpCurrency.selectOption(currency.getCurrency());
-        openAccountPage.buttonProcess.click();
+        openAccountPage.getDrpCustomer().selectOption(customerInformation.toStringShort());
+        openAccountPage.getDrpCurrency().selectOption(currency.getCurrency());
+        openAccountPage.getButtonProcess().click();
 //      TODO:  for some reason alerts are not shown
 //        openAccountPage.buttonProcess.click();
 //        String[] result = {null};
@@ -70,31 +70,31 @@ public class Manager {
 
     public static void searchCustomers(Page page, CustomerInformation customerInformation) {
         CustomersPage customersPage = new CustomersPage(page);
-        customersPage.inputSearchCustomers.fill(customerInformation.getFirstName());
+        customersPage.getInputSearchCustomers().fill(customerInformation.getFirstName());
     }
 
     public static int customerCount(Page page) {
         CustomersPage customersPage = new CustomersPage(page);
-        return customersPage.tableCustomersRows.count() - 1;
+        return customersPage.getTableCustomersRows().count() - 1;
     }
 
     public static void deleteCustomer(Page page, CustomerInformation customerInformation) {
         searchCustomers(page, customerInformation);
         CustomersPage customersPage = new CustomersPage(page);
-        customersPage.buttonDelete.click();
+        customersPage.getButtonDelete().click();
     }
 
     public static void clearCustomerSearch(Page page) {
         CustomersPage customersPage = new CustomersPage(page);
-        customersPage.inputSearchCustomers.clear();
+        customersPage.getInputSearchCustomers().clear();
     }
 
     public static void sortCustomers(Page page, CustomerSortColumn sortColumn, SortOrder sortOrder) {
         CustomersPage customersPage = new CustomersPage(page);
-        Locator columnTarget = customersPage.linkFirstName;
+        Locator columnTarget = customersPage.getLinkFirstName();
         switch (sortColumn) {
-            case LAST_NAME -> columnTarget = customersPage.linkLastName;
-            case POST_CODE -> columnTarget = customersPage.linkPostCode;
+            case LAST_NAME -> columnTarget = customersPage.getLinkLastName();
+            case POST_CODE -> columnTarget = customersPage.getLinkPostCode();
         }
         switch (sortOrder) {
             case DESC -> columnTarget.click();
@@ -108,7 +108,7 @@ public class Manager {
     public static List<CustomerInformation> getCustomerList(Page page) {
         CustomersPage customersPage = new CustomersPage(page);
         List<CustomerInformation> result = new ArrayList<>();
-        List<Locator> rows = customersPage.tableCustomersRows.all();
+        List<Locator> rows = customersPage.getTableCustomersRows().all();
         rows.subList(1, rows.size()).forEach(row -> result.add(new CustomerInformation(row.allTextContents().get(0))));
         return result;
     }

@@ -2,11 +2,13 @@ package xyz.playwright.userInterface;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import lombok.Getter;
 
+@Getter
 public class Header {
-    public Locator buttonHome;
-    public Locator buttonLogout;
-    public Locator labelHeading;
+    private final Locator buttonHome;
+    private final Locator buttonLogout;
+    private final Locator labelHeading;
 
     public Header(Page page) {
         this.buttonHome = page.getByText("Home");

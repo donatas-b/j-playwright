@@ -23,7 +23,7 @@ public class ScenarioContext {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
                 .setChannel("chrome")
-                .setHeadless(false)
+                .setHeadless(true)
                 .setArgs(Arrays.asList("--start-maximized",
                         "--enable-automation", "--no-sandbox",
                         "--disable-popup-blocking",
